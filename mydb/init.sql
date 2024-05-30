@@ -1,0 +1,8 @@
+CREATE DATABASE tfpython;
+
+USE tfpython;
+
+CREATE TABLE truc (
+    Id INTEGER SERIAL PRIMARY KEY,
+    Name TEXT
+)

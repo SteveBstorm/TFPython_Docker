@@ -1,0 +1,39 @@
+version: '1'
+
+networks:
+  monreseau:
+    internal: true
+    ipam: 
+      driver: default
+      config:
+        - subnet: 10.0.0.0/16
+          ip_range: 10.0.0.0/24
+          gateway: 10.0.0.254
+
+services:
+  monservicedb:
+    container_name: db_postgres_c
+    image: madb:v1.0.0
+    ports: 
+      - "5432:5432"
+    volumes:
+      - mydb_v:/var/postgres/pgdata
+    restart: always
+    networks:
+      monreseau:
+        ipv4_address: 10.0.0.2 
+  
+  monfront:
+    container_name: front_angular_c
+    image: stevebstorm/tfpython_burger:v1.0.0
+    ports:
+      - "81:4200"
+    depends_on:
+      - monservicedb
+    restart: unless-stopped
+    networks:
+      - monreseau
+   # restart: on-failure[10]
+
+volumes:
+  mydb_v:
